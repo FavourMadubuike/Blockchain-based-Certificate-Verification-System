@@ -1,80 +1,77 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import futoLogo from '../assets/futo-logo.png';
-import StudentLoginForm from './Student-LoginForm';
-import SenateLoginForm from './Senate-LoginForm';
-import VerifierLoginForm from './Verifier-LoginForm';
+import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import futoLogo from "../assets/futo-logo.png";
+import LoginModal from "./LoginModal";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+
 
 const Header = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [SelectedRole, setSelectedRole] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
-  //Modal open/close handlers
-  const handleLoginClick = () => {
-    setShowModal(true);
-    setSelectedRole(null);
-  };
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedRole(null);
-  };
 
-  //When a role is selected, (Student/Senate/Verifier)
-  const handleRoleClick = (role) => {
-    setSelectedRole(role);
-  };
-  const handleLoginSuccess = () => {
-    setShowModal(false);
-    setSelectedRole(null);
-  };
+  const howItWorksRef = useRef(null);
 
   return (
-    <nav className="bg-gradient-to-r from-green-600 to-white px-8 py-4 shadow-md flex items-center justify-between">
+    <>
+      <header className="w-full bg-white shadow-sm">
+        <nav className="container mx-auto flex items-center justify-between px-3 sm:px-4 py-3">
+          {/* Logo and Title */}
+          <Link to="/" className="flex items-center text-gray-900">
+            <img src={futoLogo} alt="FUTO Logo" className="h-10 w-10 object-contain" />
+            <span className="ml-2 font-bold text-lg sm:text-xl">FUTO CertVerify</span>
+          </Link>
 
-      {/* Logo Section */}
-        <Link to = "/"><img src={futoLogo} alt="FUTO Logo" className="h-10 w-10 object-contain" /></Link>
-      
-      
-      {/* Navigation Links */}
-      <ul className="flex items-center space-x-12">
-        <li><Link to ="/" className="text-green-900 hover:text-green-600 font-medium">Home</Link> </li>
-        <li><button className="bg-green-600 hover:bg-green-800 text-white px-4 py-2 rounded transition">Connect Wallet</button></li>
-        <li><button className="bg-white border border-green-700 text-green-700 px-4 py-2 rounded hover:bg-green-700 hover:text-white transition" onClick={handleLoginClick}>Login</button>
-          
-          {/* Modal */}
-          {showModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40" onClick={handleCloseModal}>
-              <div className="bg-white p-6 rounded-lg shadow-lg min-w-[350px]" onClick={e => e.stopPropagation()}>
-                {!SelectedRole && (
-                  <>
-                    <h2 className="text-lg mb-4">Login as:</h2>                   
-                    <div className="flex flex-col gap-2 mb-2">
-                      <button className="bg-green-700 text-white py-2 rounded" onClick={() => handleRoleClick('Student')}>Student</button>
-                      <button className="bg-green-700 text-white py-2 rounded" onClick={() => handleRoleClick('Senate')}>Senate</button>
-                      <button className="bg-green-700 text-white py-2 rounded" onClick={() => handleRoleClick('Verifier')}>Verifier</button>
-                    </div>
-                    <button className="text-red-600 hover:underline mt-2" onClick={handleCloseModal}>Close</button>
-                  </>
-                )}
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8">
+            <button className="text-gray-700 font-medium hover:text-green-700 transition" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}> Home</button>
 
-                {SelectedRole === 'Student' && (
-                  <StudentLoginForm onLogin = {handleLoginSuccess} onCancel = {handleCloseModal} />
-                )}
+            <button className="text-gray-700 font-medium hover:text-green-700 transition">How It Works</button>
 
-                {SelectedRole === 'Senate' && (
-                  <SenateLoginForm onLogin = {handleLoginSuccess} onCancel={handleCloseModal} />
-                )}
+            <ConnectButton />
 
-                {SelectedRole === 'Verifier' && (
-                  <VerifierLoginForm onLogin= {handleLoginSuccess} onCancel={handleCloseModal} />
-                )}
-              </div>
+            <button className="bg-green-600 rounded-md px-6 py-2 text-white font-semibold hover:bg-green-700 transition"
+              onClick={() => setShowLogin(true)}
+            >Login</button>
+          </div>
+
+          {/* Hamburger icon */}
+          <button className="md:hidden p-2 group" onClick={() => setMobileOpen((open) => !open)} aria-label="open menu">
+            <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+              <path d="M4 6h16M4 12h16M4 18h16" className="stroke-current text-slate-900 group-hover:text-green-600 transition-colors" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </nav>
+
+        {/* Mobile Menu */}
+        {mobileOpen && (
+          <div className="md:hidden bg-white shadow px-4 pb-4 pt-2 z-50">
+            <button className="block w-full text-left py-2 text-gray-700 font-medium hover:text-green-600 transition"
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setMobileOpen(false);
+              }}
+            >Home</button>
+
+            <button className="block w-full text-left py-2 text-gray-700 font-medium hover:text-green-600 transition"
+              onClick={() => setMobileOpen(false)}
+            >How It Works</button>
+
+            <div className="mt-2 mb-2">
+              <ConnectButton />
             </div>
-          )}
-        </li>
-      </ul>
-    </nav>
+
+            <button className="bg-green-600 rounded-md px-6 py-2 mt-2 text-white font-semibold hover:bg-green-700 transition w-full"
+              onClick={() => { setShowLogin(true); setMobileOpen(false) }}
+            >Login</button>
+          </div>
+        )}
+      </header>
+
+      {/* Show the modal */}
+      <LoginModal open={showLogin} onClose={() => setShowLogin(false)} />
+    </>
+
   );
 };
-
 export default Header;
