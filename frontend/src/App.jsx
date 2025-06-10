@@ -4,10 +4,8 @@ import Header from "./components/Header";
 import StudentLoginForm from "./pages/StudentLoginForm";
 import SenateLoginForm from "./pages/SenateLoginForm";
 import VerifierLoginForm from "./pages/VerifierLoginForm";
+import Home from "./components/Home";
 
-function Home() {
-  return <div>Home page is working!</div>;
-}
 
 function App() {
   const location = useLocation();

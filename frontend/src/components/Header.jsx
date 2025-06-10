@@ -10,11 +10,14 @@ const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
 
 
-  const howItWorksRef = useRef(null);
+  const scrollToHowItWorks = () => {
+    const section = document.getElementById("how-it-works");
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
-      <header className="w-full bg-white shadow-sm">
+      <header className="w-full bg-white shadow-sm fixed top-0 left-0 z-50">
         <nav className="container mx-auto flex items-center justify-between px-3 sm:px-4 py-3">
           {/* Logo and Title */}
           <Link to="/" className="flex items-center text-gray-900">
@@ -26,13 +29,11 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-8">
             <button className="text-gray-700 font-medium hover:text-green-700 transition" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}> Home</button>
 
-            <button className="text-gray-700 font-medium hover:text-green-700 transition">How It Works</button>
+            <button className="text-gray-700 font-medium hover:text-green-700 transition" onClick={scrollToHowItWorks}>How It Works</button>
 
             <ConnectButton />
 
-            <button className="bg-green-600 rounded-md px-6 py-2 text-white font-semibold hover:bg-green-700 transition"
-              onClick={() => setShowLogin(true)}
-            >Login</button>
+            <button className="bg-green-600 rounded-md px-6 py-2 text-white font-semibold hover:bg-green-700 transition" onClick={() => setShowLogin(true)}>Login</button>
           </div>
 
           {/* Hamburger icon */}
