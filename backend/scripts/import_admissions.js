@@ -17,6 +17,18 @@ const importData = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("MongoDB connected");
 
+    // Drop the recipients collection
+    try {
+      await Recipient.collection.drop();
+      console.log("Dropped recipients collection");
+    } catch (err) {
+      if (err.codeName === "NamespaceNotFound") {
+        console.log("Recipients collection does not exist, proceeding with import");
+      } else {
+        throw new Error(`Failed to drop recipients collection: ${err.message}`);
+      }
+    }
+
     // Define JSON file path
     const jsonPath = path.resolve(__dirname, "../admission_list.json");
     console.log("Attempting to read:", jsonPath);
