@@ -15,9 +15,16 @@ const ProfileSettings = ({ user }) => {
     ...(user.role === 'recipient' && {
       jambRegNumber: user.jambRegNumber || '',
       program: user.program || '',
-      department: user.department || '',
+      generalSerialNumber: user.generalSerialNumber || '',
+      departmentSerialNumber: user.departmentSerialNumber || '',
+      gender: user.gender || '',
+      state: user.state || '',
+      lga: user.lga || '',
+      modeOfAdmission: user.modeOfAdmission || '',
     }),
   });
+
+
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
@@ -252,9 +259,17 @@ const ProfileSettings = ({ user }) => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label className="text-gray-700">JAMB Registration Number</Label>
+                    <Label className="text-gray-700">General Serial Number</Label>
                     <Input
-                      value={formData.jambRegNumber}
+                      value={formData.generalSerialNumber || 'N/A'}
+                      readOnly
+                      className="border-green-200 bg-gray-50 text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-700">Department Serial Number</Label>
+                    <Input
+                      value={formData.departmentSerialNumber || 'N/A'}
                       readOnly
                       className="border-green-200 bg-gray-50 text-gray-900"
                     />
@@ -262,7 +277,47 @@ const ProfileSettings = ({ user }) => {
                   <div>
                     <Label className="text-gray-700">Name</Label>
                     <Input
-                      value={formData.name}
+                      value={formData.name || 'N/A'}
+                      readOnly
+                      className="border-green-200 bg-gray-50 text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-700">JAMB Registration Number</Label>
+                    <Input
+                      value={formData.jambRegNumber || 'N/A'}
+                      readOnly
+                      className="border-green-200 bg-gray-50 text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-700">Gender</Label>
+                    <Input
+                      value={formData.gender || 'N/A'}
+                      readOnly
+                      className="border-green-200 bg-gray-50 text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-700">State</Label>
+                    <Input
+                      value={formData.state || 'N/A'}
+                      readOnly
+                      className="border-green-200 bg-gray-50 text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-700">Local Government Area</Label>
+                    <Input
+                      value={formData.lga || 'N/A'}
+                      readOnly
+                      className="border-green-200 bg-gray-50 text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-700">Mode of Admission</Label>
+                    <Input
+                      value={formData.modeOfAdmission || 'N/A'}
                       readOnly
                       className="border-green-200 bg-gray-50 text-gray-900"
                     />
@@ -270,23 +325,7 @@ const ProfileSettings = ({ user }) => {
                   <div>
                     <Label className="text-gray-700">Program</Label>
                     <Input
-                      value={formData.program}
-                      readOnly
-                      className="border-green-200 bg-gray-50 text-gray-900"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-700">Department</Label>
-                    <Input
-                      value={formData.department}
-                      readOnly
-                      className="border-green-200 bg-gray-50 text-gray-900"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-700">Member Since</Label>
-                    <Input
-                      value={user.memberSince}
+                      value={formData.program || 'N/A'}
                       readOnly
                       className="border-green-200 bg-gray-50 text-gray-900"
                     />

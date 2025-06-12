@@ -35,11 +35,15 @@ const StudentDashboard = () => {
           name: profileData.name,
           jambRegNumber: profileData.jambRegNumber,
           program: profileData.program,
-          department: profileData.department || 'N/A',
+          generalSerialNumber: profileData.generalSerialNumber,
+          departmentSerialNumber: profileData.departmentSerialNumber,
+          gender: profileData.gender,
+          state: profileData.state,
+          lga: profileData.lga,
+          modeOfAdmission: profileData.modeOfAdmission,
           role: 'recipient', // Fix Invalid user role
           totalCertificates: 0,
           verifiedCertificates: 0,
-          memberSince: new Date(profileData.createdAt).toLocaleDateString(),
         });
 
         const certResponse = await fetch('http://localhost:5000/api/recipients/certificates', {
@@ -97,7 +101,7 @@ const StudentDashboard = () => {
     setMessage('');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/student-login');
+    navigate('/');
     setMessage('Logged out successfully.');
   };
 

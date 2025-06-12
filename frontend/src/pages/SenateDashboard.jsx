@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, LogOut, GraduationCap, Shield, CheckCircle, XCircle, PlusCircle } from 'lucide-react';
+import { User, LogOut, GraduationCap, Shield, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CertificateCard from '@/components/CertificateCard';
 import ProfileSettings from '@/components/ProfileSetting';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-const SenateDashboard = () => {
+const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('certificates');
   const [user, setUser] = useState({});
   const [certificates, setCertificates] = useState([]);
@@ -19,28 +19,37 @@ const SenateDashboard = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        navigate('/senate-login');
+        navigate('/student-login');
         return;
       }
 
       try {
-        const profileResponse = await fetch('http://localhost:5000/api/issuers/profile', {
+        const profileResponse = await fetch('http://localhost:5000/api/recipients/profile', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!profileResponse.ok) throw new Error('Failed to fetch profile');
         const profileData = await profileResponse.json();
-        console.log('Profile data:', profileData);
+        console.log('Recipient profile data:', profileData);
         setUser({
-          name: profileData.name,
-          username: profileData.username,
-          email: profileData.email,
-          role: 'issuer',
+          name: profileData.name || profileData.fullname || 'N/A',
+          jambRegNumber: profileData.jambRegNumber || profileData.jamb_reg_number || 'N/A',
+          program: profileData.program || profileData.programme || 'N/A',
+          department: profileData.department || 'N/A',
+          generalSerialNumber: profileData.generalSerialNumber || 'N/A',
+          departmentSerialNumber: profileData.departmentSerialNumber || 'N/A',
+          gender: profileData.gender || 'N/A',
+          state: profileData.state || 'N/A',
+          lga: profileData.lga || 'N/A',
+          modeOfAdmission: profileData.modeOfAdmission || profileData.mode_of_admission || 'N/A',
+          role: 'recipient',
           totalCertificates: 0,
           verifiedCertificates: 0,
-          memberSince: new Date(profileData.createdAt).toLocaleDateString(),
+          memberSince: profileData.createdAt ? new Date(profileData.createdAt).toLocaleDateString() : 'N/A',
+          createdAt: profileData.createdAt,
+          updatedAt: profileData.updatedAt,
         });
 
-        const certResponse = await fetch('http://localhost:5000/api/issuers/certificates', {
+        const certResponse = await fetch('http://localhost:5000/api/recipients/certificates', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!certResponse.ok) throw new Error('Failed to fetch certificates');
@@ -59,72 +68,68 @@ const SenateDashboard = () => {
     fetchData();
   }, [navigate]);
 
-  const handleIssueCertificate = () => {
-    setMessage('');
-    setMessage('Certificate issuance feature coming soon!');
+  const handleDownload = async (certificateId) => {
+    try {
+      setMessage('');
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/recipients/certificates/${certificateId}/download`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Download failed');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `certificate-${certificateId}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      setMessage(`Downloaded certificate ${certificateId}`);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
-  const handleVerifyCertificate = (certificateId) => {
-    setMessage('');
-    setCertificates((prev) =>
-      prev.map((cert) =>
-        cert.certificateID === certificateId ? { ...cert, status: 'active' } : cert
-      )
-    );
-    setUser((prev) => ({
-      ...prev,
-      verifiedCertificates: prev.verifiedCertificates + 1,
-    }));
-    setMessage(`Certificate ${certificateId} verified successfully`);
-  };
-
-  const handleRevokeCertificate = (certificateId) => {
-    setMessage('');
-    setCertificates((prev) =>
-      prev.map((cert) =>
-        cert.certificateID === certificateId ? { ...cert, status: 'pending' } : cert
-      )
-    );
-    setUser((prev) => ({
-      ...prev,
-      verifiedCertificates: prev.verifiedCertificates - 1,
-    }));
-    setMessage(`Certificate ${certificateId} revoked successfully`);
+  const handleShare = (certificateId) => {
+    try {
+      setMessage('');
+      const shareUrl = `http://localhost:5173/verify/${certificateId}`;
+      navigator.clipboard.writeText(shareUrl);
+      setMessage('Certificate link copied to clipboard!');
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const handleLogout = () => {
     setMessage('');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/senate-login');
+    navigate('/');
     setMessage('Logged out successfully.');
   };
 
   return (
     <div className="min-h-screen bg-green-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <GraduationCap className="h-8 w-8 text-green-800" />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">FUTO Senate Dashboard</h1>
-                <p className="text-sm text-gray-600">Certificate Issuance & Verification System</p>
-              </div>
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center space-x-3">
+            <GraduationCap className="h-8 w-8 text-green-800" />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">FUTO Student Dashboard</h1>
+              <p className="text-sm text-gray-600">Certificate Management System</p>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm font-medium text-gray-700">Welcome, {user.name || 'Issuer'}</span>
-              <ConnectButton />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLogout}
-                className="text-red-600 border-red-200 hover:bg-green-50"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <ConnectButton />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="text-red-600 border-red-200 hover:bg-green-50"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
           </div>
         </div>
 
@@ -145,7 +150,7 @@ const SenateDashboard = () => {
                   onClick={() => setActiveTab('certificates')}
                 >
                   <Shield className="h-4 w-4 mr-3" />
-                  Certificates
+                  My Certificates
                 </Button>
                 <Button
                   variant={activeTab === 'profile' ? 'default' : 'ghost'}
@@ -177,22 +182,13 @@ const SenateDashboard = () => {
             )}
             {activeTab === 'certificates' && (
               <div>
-                <div className="mb-8 flex justify-between items-center">
-                  <div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Certificate Management</h2>
-                    <p className="text-gray-600">Issue, verify, and manage blockchain-verified certificates</p>
-                  </div>
-                  <Button
-                    onClick={handleIssueCertificate}
-                    className="bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    <PlusCircle className="h-4 w-4 mr-2" />
-                    Issue New Certificate
-                  </Button>
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">My Certificates</h2>
+                  <p className="text-gray-600">Manage and share your blockchain-verified certificates</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                  <Card className="bg-green-600 text-white hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                  <Card className="bg-green-600 text-white">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
@@ -203,7 +199,7 @@ const SenateDashboard = () => {
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-green-600 text-white hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                  <Card className="bg-green-600 text-white">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
@@ -214,7 +210,7 @@ const SenateDashboard = () => {
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="bg-orange-600 text-white hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                  <Card className="bg-orange-600 text-white">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
@@ -227,25 +223,20 @@ const SenateDashboard = () => {
                   </Card>
                 </div>
 
-                <Card className="bg-white border-green-200">
-                  <CardHeader>
-                    <CardTitle className="text-xl font-semibold text-gray-900">Certificates</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {certificates.map((certificate) => (
-                      <CertificateCard
-                        key={certificate.certificateID}
-                        certificate={certificate}
-                        userRole="issuer"
-                        onVerify={() => handleVerifyCertificate(certificate.certificateID)}
-                        onRevoke={() => handleRevokeCertificate(certificate.certificateID)}
-                      />
-                    ))}
-                    {certificates.length === 0 && (
-                      <p className="text-gray-600 text-center">No certificates found.</p>
-                    )}
-                  </CardContent>
-                </Card>
+                <div className="space-y-6">
+                  {certificates.map((certificate) => (
+                    <CertificateCard
+                      key={certificate.certificateID}
+                      certificate={certificate}
+                      userRole="recipient"
+                      onDownload={handleDownload}
+                      onShare={handleShare}
+                    />
+                  ))}
+                  {certificates.length === 0 && (
+                    <p className="text-gray-600 text-center">No certificates found.</p>
+                  )}
+                </div>
               </div>
             )}
 
@@ -257,4 +248,4 @@ const SenateDashboard = () => {
   );
 };
 
-export default SenateDashboard;
+export default StudentDashboard;
