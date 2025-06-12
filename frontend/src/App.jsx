@@ -7,17 +7,8 @@ import VerifierLoginForm from "./pages/VerifierLoginForm";
 import StudentDashboard from "./pages/StudentDashboard";
 import SenateDashboard from "./pages/SenateDashboard";
 import { Toaster } from "@/components/ui/toaster";
+import Home from "./components/Home"
 
-function Home() {
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to FUTO Certificate Verification System</h1>
-        <p className="text-gray-600">Securely manage and verify academic certificates using blockchain technology.</p>
-      </div>
-    </div>
-  );
-}
 
 function RootRoute() {
   const token = localStorage.getItem("token");
