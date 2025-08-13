@@ -12,7 +12,7 @@ const StudentLoginForm = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/recipients/login", {
+      const response = await fetch(`${VITE_BACKEND_URI}/api/recipients/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ jambRegNumber: jambNumber, password }),

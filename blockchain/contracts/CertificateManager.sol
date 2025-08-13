@@ -1,9 +1,10 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
 contract CertificateManager {
   struct Certificate {
     bytes32 certificateHash;
-    string recipientName;
+    string jambRegNumber; // Changed from recipientName to jambRegNumber
     string program;
     uint256 issueDate;
     address issuer;
@@ -13,7 +14,7 @@ contract CertificateManager {
   mapping(bytes32 => Certificate) public certificates;
   mapping(address => bool) public authorizedIssuers;
 
-  event CertificateIssued(bytes32 indexed certificateId, string recipientName, string program, uint256 issueDate, address issuer);
+  event CertificateIssued(bytes32 indexed certificateId, string jambRegNumber, string program, uint256 issueDate, address issuer);
   event CertificateRevoked(bytes32 indexed certificateId, address issuer);
   event IssuerAuthorized(address indexed issuer);
   event IssuerRevoked(address indexed issuer);
@@ -41,25 +42,25 @@ contract CertificateManager {
   function issueCertificate(
     bytes32 certificateId,
     bytes32 certificateHash,
-    string memory recipientName,
+    string memory jambRegNumber, // Changed from recipientName to jambRegNumber
     string memory program,
     uint256 issueDate
   ) external onlyAuthorizedIssuer {
     require(certificates[certificateId].issueDate == 0, "Certificate ID already exists");
     certificates[certificateId] = Certificate({
       certificateHash: certificateHash,
-      recipientName: recipientName,
+      jambRegNumber: jambRegNumber, // Updated field
       program: program,
       issueDate: issueDate,
       issuer: msg.sender,
       isRevoked: false
     });
-    emit CertificateIssued(certificateId, recipientName, program, issueDate, msg.sender);
+    emit CertificateIssued(certificateId, jambRegNumber, program, issueDate, msg.sender);
   }
 
   function verifyCertificate(bytes32 certificateId) external view returns (
     bytes32 certificateHash,
-    string memory recipientName,
+    string memory jambRegNumber, // Changed from recipientName to jambRegNumber
     string memory program,
     uint256 issueDate,
     address issuer,
@@ -69,7 +70,7 @@ contract CertificateManager {
     require(cert.issueDate != 0, "Certificate does not exist");
     return (
       cert.certificateHash,
-      cert.recipientName,
+      cert.jambRegNumber, // Updated field
       cert.program,
       cert.issueDate,
       cert.issuer,

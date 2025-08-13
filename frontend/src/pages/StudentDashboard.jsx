@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import CertificateCard from '@/components/CertificateCard';
-import ProfileSettings from '@/components/ProfileSetting';
+import StudentProfileSettings from '@/components/student/StudentProfileSettings';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const StudentDashboard = () => {
@@ -25,7 +25,7 @@ const StudentDashboard = () => {
       }
 
       try {
-        const profileResponse = await fetch('http://localhost:5000/api/recipients/profile', {
+        const profileResponse = await fetch(`${VITE_BACKEND_URI}/api/recipients/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!profileResponse.ok) throw new Error('Failed to fetch profile');
@@ -46,7 +46,7 @@ const StudentDashboard = () => {
           verifiedCertificates: 0,
         });
 
-        const certResponse = await fetch('http://localhost:5000/api/recipients/certificates', {
+        const certResponse = await fetch(`${VITE_BACKEND_URI}/api/recipients/certificates`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!certResponse.ok) throw new Error('Failed to fetch certificates');
@@ -69,7 +69,7 @@ const StudentDashboard = () => {
     try {
       setMessage('');
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/recipients/certificates/${certificateId}/download`, {
+      const response = await fetch(`${VITE_BACKEND_URI}/api/recipients/certificates/${certificateId}/download`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Download failed');
@@ -89,7 +89,7 @@ const StudentDashboard = () => {
   const handleShare = (certificateId) => {
     try {
       setMessage('');
-      const shareUrl = `http://localhost:5173/verify/${certificateId}`;
+      const shareUrl = `${VITE_FRONTEND_URI}/verify/${certificateId}`;
       navigator.clipboard.writeText(shareUrl);
       setMessage('Certificate link copied to clipboard!');
     } catch (err) {
@@ -242,7 +242,7 @@ const StudentDashboard = () => {
               </div>
             )}
 
-            {activeTab === 'profile' && <ProfileSettings user={user} />}
+            {activeTab === 'profile' && <StudentProfileSettings user={user} />}
           </div>
         </div>
       </div>

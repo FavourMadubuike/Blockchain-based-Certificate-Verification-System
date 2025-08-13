@@ -2,16 +2,30 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-require("dotenv").config();
+const path = require('path');
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/Uploads', express.static(path.join(__dirname, 'Uploads')));
+require("dotenv").config();
+
+
+// Configure CORS
+app.use(cors({
+  origin: 'http://localhost:5174',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// Configure body-parser for JSON and URL-encoded data
+app.use(bodyParser.json({ limit: '15mb' })); // Increase limit for JSON payloads
+app.use(bodyParser.urlencoded({ extended: true, limit: '15mb' })); // Increase limit for URL-encoded
 
 // MongoDB connection
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/Bockchain-Certificate-Verification-System', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err.message));
 

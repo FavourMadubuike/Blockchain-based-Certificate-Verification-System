@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import futoLogo from "../assets/futo-logo.png";
 import LoginModal from "./LoginModal";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+
 
 
 const Header = () => {
@@ -31,7 +31,6 @@ const Header = () => {
 
             <button className="text-gray-700 font-medium hover:text-green-700 transition" onClick={scrollToHowItWorks}>How It Works</button>
 
-            <ConnectButton />
 
             <button className="bg-green-600 rounded-md px-6 py-2 text-white font-semibold hover:bg-green-700 transition" onClick={() => setShowLogin(true)}>Login</button>
           </div>

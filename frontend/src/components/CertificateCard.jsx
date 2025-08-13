@@ -19,7 +19,7 @@ const CertificateCard = ({ certificate, userRole, onVerify, onRevoke, onDownload
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No authentication token found');
-      const response = await fetch(`http://localhost:5000/api/issuers/verify-certificate/${certificate.certificateID}`, {
+      const response = await fetch(`${VITE_BACKEND_URI}/api/issuers/verify-certificate/${certificate.certificateID}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ const CertificateCard = ({ certificate, userRole, onVerify, onRevoke, onDownload
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No authentication token found');
-      const response = await fetch(`http://localhost:5000/api/issuers/revoke-certificate/${certificate.certificateID}`, {
+      const response = await fetch(`${VITE_BACKEND_URI}/api/issuers/revoke-certificate/${certificate.certificateID}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

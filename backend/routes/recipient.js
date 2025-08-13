@@ -3,7 +3,7 @@ const fs = require("fs").promises;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Recipient = require("../models/Recipient");
-const Certificate = require("../models/certificate");
+const Certificate = require("../models/Certificate");
 const router = express.Router();
 
 // Middleware to verify issuer (Senate) JWT
@@ -91,13 +91,37 @@ router.post("/login", async (req, res) => {
       console.warn("JWT_SECRET is not set in environment variables");
     }
     const token = jwt.sign(
-      { id: recipient._id, role: recipient.role },
+      {
+        id: recipient._id,
+        role: recipient.role,
+        name: recipient.name,
+        jambRegNumber: recipient.jambRegNumber,
+        generalSerialNumber: recipient.generalSerialNumber,
+        departmentSerialNumber: recipient.departmentSerialNumber,
+        program: recipient.program,
+        gender: recipient.gender,
+        state: recipient.state,
+        lga: recipient.lga,
+        modeOfAdmission: recipient.modeOfAdmission,
+      },
       process.env.JWT_SECRET || "your_jwt_secret",
       { expiresIn: "1h" }
     );
     res.status(201).json({
       token,
-      user: { id: recipient._id, name: recipient.name, role: recipient.role },
+      user: {
+        id: recipient._id,
+        name: recipient.name,
+        role: recipient.role,
+        jambRegNumber: recipient.jambRegNumber,
+        generalSerialNumber: recipient.generalSerialNumber,
+        departmentSerialNumber: recipient.departmentSerialNumber,
+        program: recipient.program,
+        gender: recipient.gender,
+        state: recipient.state,
+        lga: recipient.lga,
+        modeOfAdmission: recipient.modeOfAdmission,
+      },
     });
   } catch (err) {
     console.error("Login error:", err);
@@ -109,12 +133,11 @@ router.post("/login", async (req, res) => {
 router.get("/certificates", verifyRecipient, async (req, res) => {
   try {
     const certificates = await Certificate.find({ recipientID: req.user.id });
-    // Placeholder for Sepolia verification
     const verifiedCertificates = certificates.map((cert) => ({
       certificateID: cert.certificateID,
       program: cert.program,
       issueDate: cert.graduationDate,
-      status: cert.status, // Replace with Sepolia call
+      status: cert.status,
       issuer: "Federal University of Technology Owerri",
       type: cert.program.includes("Bachelor") ? "Degree Certificate" : "Professional Certificate",
       certificateHash: cert.certificateHash,
@@ -140,21 +163,21 @@ router.get("/profile", verifyRecipient, async (req, res) => {
   }
 });
 
-// Download Certificate (Placeholder)
+// Download Certificate
 router.get("/certificates/:certificateId/download", verifyRecipient, async (req, res) => {
   try {
     const certificate = await Certificate.findOne({
       certificateID: req.params.certificateId,
       recipientID: req.user.id,
     });
-    if (!certificate) {
-      return res.status(404).json({ message: "Certificate not found" });
+    if (!certificate || !certificate.fileBuffer) {
+      return res.status(404).json({ message: "Certificate or file not found" });
     }
-    // Placeholder: Serve file from MongoDB or file system
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=certificate-${certificate.certificateID}.pdf`);
-    // Replace with actual file buffer
-    res.send(Buffer.from('Sample PDF content'));
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=certificate-${certificate.certificateID}.pdf`,
+    });
+    res.send(certificate.fileBuffer);
   } catch (err) {
     console.error("Download error:", err);
     res.status(500).json({ message: "Server error", error: err.message });

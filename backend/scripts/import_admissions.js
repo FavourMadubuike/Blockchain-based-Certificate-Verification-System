@@ -30,7 +30,7 @@ const importData = async () => {
     }
 
     // Define JSON file path
-    const jsonPath = path.resolve(__dirname, "../admission_list.json");
+    const jsonPath = path.resolve(__dirname, "../futo_admissions.json");
     console.log("Attempting to read:", jsonPath);
 
     // Read JSON file
