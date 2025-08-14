@@ -11,7 +11,7 @@ require("dotenv").config();
 
 // Configure CORS
 app.use(cors({
-  origin: 'http://localhost:5174',
+  origin: `${process.env.CLIENT_URL}`,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
