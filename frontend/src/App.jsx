@@ -4,8 +4,12 @@ import Header from "./components/Header";
 import StudentLoginForm from "./pages/StudentLoginForm";
 import SenateLoginForm from "./pages/SenateLoginForm";
 import VerifierLoginForm from "./pages/VerifierLoginForm";
+import VerifierSignUpForm from "./pages/VerifierSignUpForm";
 import StudentDashboard from "./pages/StudentDashboard";
 import SenateDashboard from "./pages/SenateDashboard";
+import VerifierDashboard from "./pages/VerifierDashboard";
+import ProfileSettings from "./pages/ProfileSettings";
+import VerifierLayout from "./components/VerifierLayout";
 import { Toaster } from "@/components/ui/toaster";
 import Home from "./components/Home"
 
@@ -57,7 +61,7 @@ function ProtectedRoute({ children, requiredRole }) {
 function App() {
   const location = useLocation();
   const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
-  const showHeaderRoutes = ["/student-login", "/senate-login", "/verifier-login"];
+  const showHeaderRoutes = ["/student-login", "/senate-login", "/verifier-login", "/verifier-signup"];
   const showHeader = showHeaderRoutes.includes(location.pathname) || (location.pathname === "/" && !user);
 
   console.log("App: pathname=", location.pathname, "user=", user, "showHeader=", showHeader);
@@ -70,6 +74,23 @@ function App() {
         <Route path="/student-login" element={<StudentLoginForm />} />
         <Route path="/senate-login" element={<SenateLoginForm />} />
         <Route path="/verifier-login" element={<VerifierLoginForm />} />
+        <Route path="/verifier-signup" element={<VerifierSignUpForm />} />
+        <Route
+          path="/verifier-dashboard" 
+          element={
+            <VerifierLayout>
+              <VerifierDashboard />
+            </VerifierLayout>
+          }
+        />
+        <Route
+          path="/profile-settings"
+          element={
+            <VerifierLayout>
+              <ProfileSettings />
+            </VerifierLayout>
+          }
+        />
       </Routes>
       <Toaster />
     </>

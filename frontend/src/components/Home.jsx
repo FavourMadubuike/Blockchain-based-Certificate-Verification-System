@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import LoginModal from "./LoginModal";
 import HowItWorks from "./HowItWorks";
@@ -6,6 +7,8 @@ import CtaSection from "./CtaSection";
 import Footer from "./Footer";
 
 export default function Home() {
+    const navigate = useNavigate();
+
     return (
         <div className="min-h-[calc(100vh-80px)] pt-16 bg-green-50">
             <div className="container mx-auto flex flex-col-reverse lg:flex-row items-start justify-center gap-12 px-6 py-12 lg:mt-32">
@@ -57,7 +60,7 @@ export default function Home() {
                     <p className="text-lg mt-4 text-gray-700 text-center lg:text-left max-w-">Federal University of Technology Owerri's revolutionary blockchain certificate verification system. Protect your credentials, build trust, and verify authenticity instantly.</p>
                     <div className="mt-8 flex sm:flex-row gap-4 w-full justify-center lg:justify-start">
                         <ConnectButton />
-                        <button className="border border-green-600 text-green-600 bg-white font-semibold px-8 rounded hover:bg-green-50 transition">Verify Certificate</button>
+                        <button onClick={() => navigate("/verifier-signup")} className="border border-green-600 text-green-600 bg-white font-semibold px-8 rounded hover:bg-green-50 transition">Verify Certificate</button>
                     </div>
                     {/* Statics */}
                     <div className="border-t border-green-200 w-full mt-10 grid grid-cols-3 sm:grid-cols-3 gap-6 pt-8 text-center lg:text-left">

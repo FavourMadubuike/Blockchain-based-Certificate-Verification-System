@@ -29,7 +29,7 @@ const ROLES = [
         iconStroke: "#A78BFA",
         name: "Verifier",
         desc: "Verify certificates",
-        path: "/verifier-login"
+        path: "/verifier-signup"
     },
 ];
 

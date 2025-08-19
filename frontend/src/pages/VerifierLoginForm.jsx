@@ -28,8 +28,9 @@ const VerifierLoginForm = () => {
                     <label className="font-semibold mb-2 block">Email Address</label>
                     <div className="relative mb-4">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-                                <path d="M4 4h16v16H4V4zm2 2v2h12V6H6zm0 4v8h12v-8H6z" stroke="#a3a3a3" strokeWidth="1.5" />
+                            <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+                                <rect x="2" y="5" width="16" height="10" rx="2" stroke="#9ca3af" strokeWidth="1.5" />
+                                <path d="M2 5l8 6 8-6" stroke="#9ca3af" strokeWidth="1.5" />
                             </svg>
                         </span>
                         <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Enter your email" required
@@ -50,7 +51,7 @@ const VerifierLoginForm = () => {
                         />
                     </div>
 
-                    <button type="submit" className="bg-teal-600 w-full rounded-md text-white py-2 font-semibold hover:bg-teal-700 transition mb-3">Login to Verify</button>
+                    <button onClick={() => navigate("/verifier-dashboard") } type="submit" className="bg-teal-600 w-full rounded-md text-white py-2 font-semibold hover:bg-teal-700 transition mb-3">Login to Verify</button>
                 </form>
 
                 <div className="w-full flex items-center my-3">
@@ -60,19 +61,22 @@ const VerifierLoginForm = () => {
                 </div>
 
                 {/* Google login */}
-                <button className="flex items-center justify-center border border-gray-300 w-full rounded-md py-2 font-semibold text-sm hover:bg-gray-50 transition">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" className="mr-2">
+                <button className="flex items-center justify-center gap-2 border border-gray-300 w-full rounded-md py-2 hover:bg-gray-50 transition">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
                         <g>
-                            <path d="M21.805 10.023h-9.785v3.977h5.62c-.244 1.326-1.463 3.897-5.62 3.897-3.375 0-6.12-2.786-6.12-6.218a6.212 6.212 0 0 1 6.12-6.18c1.926 0 3.22.822 3.96 1.53l2.7-2.633c-1.71-1.582-3.93-2.554-6.66-2.554C5.1 2.842 0 7.229 0 12.68c0 5.453 5.1 9.84 10.89 9.84 6.33 0 10.51-4.441 10.51-10.715 0-.719-.08-1.263-.18-1.782z" fill="#4285F4" />
-                            <path d="M2.832 6.684l3.075 2.259c.822-1.08 2.075-2.169 4.983-2.169 1.926 0 3.22.822 3.96 1.53l2.7-2.633c-1.71-1.582-3.93-2.554-6.66-2.554-3.285 0-6.077 1.725-7.8 4.547z" fill="#34A853" />
-                            <path d="M10.89 22.52c2.64 0 5.16-.875 7.08-2.38l-3.274-2.694c-.91.657-2.13 1.122-3.806 1.122-3.09 0-5.7-2.017-6.638-4.748l-3.164 2.445c1.743 3.43 5.235 5.83 9.802 5.83z" fill="#FBBC05" />
-                            <path d="M21.805 10.023h-9.785v3.977h5.62c-.244 1.326-1.463 3.897-5.62 3.897-3.375 0-6.12-2.786-6.12-6.218a6.212 6.212 0 0 1 6.12-6.18c1.926 0 3.22.822 3.96 1.53l2.7-2.633c-1.71-1.582-3.93-2.554-6.66-2.554C5.1 2.842 0 7.229 0 12.68c0 5.453 5.1 9.84 10.89 9.84 6.33 0 10.51-4.441 10.51-10.715 0-.719-.08-1.263-.18-1.782z" fill="none" />
+                            <path d="M19.6 10.23c0-.68-.06-1.36-.17-2H10v3.79h5.5c-.24 1.26-.97 2.33-2.06 3.05v2.54h3.34c1.96-1.8 3.09-4.46 3.09-7.38z" fill="#4285F4" />
+                            <path d="M10 20c2.7 0 4.97-.89 6.62-2.42l-3.34-2.54c-.92.61-2.09.98-3.29.98-2.53 0-4.67-1.71-5.43-4.01H1.11v2.6C2.82 17.98 6.13 20 10 20z" fill="#34A853" />
+                            <path d="M4.57 11.99c-.21-.61-.33-1.25-.33-1.99s.12-1.38.33-1.99v-2.6H1.11A9.97 9.97 0 0 0 0 10c0 1.58.38 3.07 1.11 4.39l3.46-2.6z" fill="#FBBC05" />
+                            <path d="M10 4c1.47 0 2.79.51 3.83 1.53l2.87-2.87C14.96 1.11 12.7 0 10 0 6.13 0 2.82 2.02 1.11 5.61l3.46 2.6C5.33 5.71 7.47 4 10 4z" fill="#EA4335" />
+                            <path d="M0 0h20v20H0z" fill="none" />
                         </g>
                     </svg>
-                    Continue with Google
+                    <span className="font-medium text-gray-700 text-sm">Continue with Google</span>
                 </button>
 
-                <button className="text-teal-700 hover:underline mt-2" type="button" onClick={() => navigate("/")}>Back to Home</button>
+                <button className="text-center mt-3 text-green-600 hover:text-green-500" type="button" onClick={() => navigate("/verifier-signup")}> Don't have an account? Sign Up</button>
+
+                <button className="text-teal-700 text-sm hover:underline mt-2" type="button" onClick={() => navigate("/")}>Back to Home</button>
             </div>
         </div>
     )
